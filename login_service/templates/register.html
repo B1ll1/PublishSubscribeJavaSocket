@@ -9,7 +9,7 @@
 			    		<h3 class="panel-title">Registration Form</h3>
 			 			</div>
 			 			<div class="panel-body">
-			    		<form role="form" action="/users/register" method="POST">
+			    		<form role="form" action="/users/register" method="POST" onsubmit="return checkForm(this)">
 			    			<div class="row">
 			    				<div class="col-xs-6 col-sm-6 col-md-6">
 			    					<div class="form-group">
@@ -43,4 +43,27 @@
     		</div>
     	</div>
     </div>
+
+    <script type="text/javascript">
+
+    window.onload = checkWarning;
+
+    function checkWarning(){
+    	var text = '{{ warning }}';
+    	if(text.length>0)
+    		alert(text);
+    }
+
+	function checkForm(form)
+	{
+
+		if ($("#password").val() != $("#password_confirmation").val()) {
+	          alert("Passwords do not match.");
+	          return false;
+      	}
+ 	
+		return true;
+	}
+
+</script>
 {% endblock %}
