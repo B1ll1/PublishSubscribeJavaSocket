@@ -2,12 +2,16 @@ import os
 from config import login_manager, app, db
 from werkzeug.security import generate_password_hash, check_password_hash
 
+# Modelo User
 class User(db.Model):
+	# Nome da tabela de usuários no banco
 	__tablename__ = 'users'
+	# Atributos do modelo
 	id = db.Column('id', db.Integer, primary_key = True)
 	username = db.Column('username', db.String(18), unique = True, index = True)
 	password = db.Column('password', db.String(20))
 	email = db.Column('email', db.String(100), unique = True, index = True)
+
 
 	def __init__(self, username, password, email):
 		self.username = username
