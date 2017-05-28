@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    {% if  current_user.type == 1 %}
+      <title>Analistas</title>
+    {% elif  current_user.type == 2 %}
+      <title>Inscritos</title>
+    {% endif %}
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/starter-template.css') }}" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          {% if  current_user.type == 1 %}
+            <a class="navbar-brand" href="#">Analitas</a>
+          {% elif  current_user.type == 2 %}
+            <a class="navbar-brand" href="#">Inscritos</a>
+          {% endif %}
+        </div>
+        {% if  current_user.type == 2 %}
+          <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/inscritos">Inscricoes</a></li>
+            <li><a href="/publicacoes">Publicacoes</a></li>
+          </ul>
+        </div>
+        {% endif %}
+
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="starter-template">
+       <div class="panel panel-default">
+            <div class="panel-heading" style="background-color: Blue; ">
+                <h3 class="panel-title" style="color: White;">Publicações</h3>
+            </div>
+            <div class="panel-body" style="overflow-y:scroll; max-height: 500px;">
+                <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th style="width: 30%;">Tópico</th>
+                        <th style="width: 70%;">Publicação</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr align="left">
+                        <td>Tópico</td>
+                        <td>Publicação</td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+
+      </div>
+
+    </div><!-- /.container -->
+
+    <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
+    <script type="text/javascript" charset="utf-8">
+        var user = {id:{{ current_user.id }}, type: {{ current_user.type }}}
+        var socket = io.connect('http://localhost:3000', { secure: true });
+         socket.on('connect', function() {
+
+            console.log("connected");
+            socket.emit('user_data', {user});
+
+          });
+
+
+
+          socket.on('disconnect', function() {
+
+            console.log("disconnected");
+
+          });
+
+          socket.on('message', function(message) {
+
+            console.log(message);
+
+          });
+    </script>
+  </body>
+</html>
+
+
+
+
+
+
+
+

@@ -1,0 +1,43 @@
+{% extends "master.html"%}
+
+{% block body %}
+
+    <h1>Sistema de inscrição baseado no método Publish/Subscribe</h1>
+    <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+
+    <form role="form" action="/publicar" method="POST">
+        <div class="form-group">
+            <input type="text" name="topic" id="topic" class="form-control input-sm" placeholder="Tópico">
+        </div>
+        <div class="form-group">
+            <textarea name="text" id="text" class="form-control input-sm" placeholder="Texto da Publicação"></textarea>
+        </div>
+        <input type="submit" value="Publicar" class="btn btn-info btn-block">
+    </form>
+
+    <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
+    <script type="text/javascript" charset="utf-8">
+        var user = {id:{{ current_user.id }}, type: {{ current_user.type }}}
+        var socket = io.connect('http://localhost:3000', { secure: true });
+         socket.on('connect', function() {
+
+            console.log("connected");
+            socket.emit('user_data', {user});
+
+          });
+
+          socket.on('disconnect', function() {
+
+            console.log("disconnected");
+
+          });
+
+          socket.on('message', function(message) {
+
+            console.log(message);
+
+          });
+    </script>
+
+{% endblock %}
+

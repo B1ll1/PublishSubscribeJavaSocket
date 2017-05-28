@@ -9,7 +9,12 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Starter Template for Bootstrap</title>
+    {% if  current_user.type == 1 %}
+      <title>Analistas</title>
+    {% elif  current_user.type == 2 %}
+      <title>Inscritos</title>
+    {% endif %}
+
 
     <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
@@ -29,22 +34,28 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          {% if  current_user.type == 1 %}
+            <a class="navbar-brand" href="#">Analitas</a>
+          {% elif  current_user.type == 2 %}
+            <a class="navbar-brand" href="#">Inscritos</a>
+          {% endif %}
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
+        {% if  current_user.type == 2 %}
+          <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li class="active"><a href="/inscritos">Inscricoes</a></li>
+            <li><a href="/publicacoes">Publicacoes</a></li>
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
+        {% endif %}
+
       </div>
     </nav>
 
     <div class="container">
       <div class="starter-template">
-        {% block body %}{% endblock %} 
-        
+        {% block body %}{% endblock %}
+
       </div>
 
     </div><!-- /.container -->
