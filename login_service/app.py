@@ -11,6 +11,10 @@ def render_sub():
 	results_subscriptions = Subscription.query.filter_by(user_id = current_user.id)
 	return results_topics, results_subscriptions
 
+def render_user_topics():
+	subscriptions = Subscription.query.filter_by(user_id = current_user.id).all()
+	return subscriptions
+
 @login_manager.user_loader
 def load_user(id):
 	return User.query.get(int(id))
@@ -31,7 +35,9 @@ def pubs():
 @login_required
 def publishings():
 	if current_user.type == 2:
-		return render_template('publicacoes.html')
+		subscriptions = render_user_topics()
+		print subscriptions
+		return render_template('publicacoes.html', subs = subscriptions)
 	else:
 		return redirect(url_for('logout'))
 
@@ -125,4 +131,4 @@ def logout():
 
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0',port=5005)
+	app.run(host='0.0.0.0',port=5000)

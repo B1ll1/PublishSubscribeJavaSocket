@@ -19,4 +19,4 @@ class Subscription(db.Model):
         return unicode(self.user_id)
 
     def __repr__(self):
-        return '<Subscription $r>' % (self.topic)
+        return self.topic

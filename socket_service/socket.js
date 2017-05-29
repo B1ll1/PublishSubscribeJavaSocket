@@ -14,25 +14,34 @@ con.connect(function(err) {
   console.log("Conectado no banco!");
 });
 
+function getSubscriptions(data, callback) {
+        con.query('SELECT DISTINCT subscriptions.topic from subscriptions', function(err, rows) {
+            if (err) {
+                callback(err, null);
+            } else
+                callback(null, rows);
+        });
+}
+
 io.sockets.on('connection', function(socket) {
-    console.log("New connection");
+    var subscriptions = null;
 
     socket.on('user_data', function (data) {
-        console.log(data.user.id,data.user.type);
-        console.log("Received: " + data.id);
 
-        if(data.user.type==1){
-
-        }
-
-        else if(data.user.type==2){
-            con.query('SELECT * from subscriptions where user_id = ?', [message], function (error, results, fields) {
-              if (error) throw error;
-              var subscriptions = JSON.stringify(results)
+        if(data.type==2){
+            console.log('Inscrito Conectado');
+            getSubscriptions(data, function(err, content, socket) {
+                if (err) {
+                    console.log(err);
+                    // Do something with your error...
+                } else {
+                    subscriptions = content;
+                }
             });
         }
-
-
+        else{
+             console.log('Analista Conectado');
+        }
 
         /*
         con.query('SELECT * from subscriptions where user_id = ?', [message], function (error, results, fields) {
@@ -40,7 +49,14 @@ io.sockets.on('connection', function(socket) {
           var subscriptions = JSON.stringify(results)
 
         });*/
-        socket.send('Text from server');
     });
+
+    socket.on('message', function (data){
+        console.log('chegou');
+        socket.broadcast.emit('publicacoes/'+data.message.topic, { data });
+    })
+
 });
+
+
 server.listen(3000);
