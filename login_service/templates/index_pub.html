@@ -17,12 +17,13 @@
           <label for="text" class="label-control">Texto da Publicação</label>
           <textarea name="text" id="text" class="form-control input-sm" placeholder="Texto da Publicação" style="min-height: 150px; resize:vertical;"></textarea>
         </div>
+        <div class="panel-footer">
+          <input type="submit" value="Publicar" class="btn btn-info pull-right" onClick="publish()">
+          <span class="clearfix"></span>
+        </div>
       </form>
     </div>
-    <div class="panel-footer">
-      <input type="submit" value="Publicar" class="btn btn-info pull-right" onClick="publish()">
-      <span class="clearfix"></span>
-    </div>
+
   </div>
 
   <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
@@ -50,10 +51,6 @@
       var text = $('#text').val();
       var message = {topic: topic, text: text}
       socket.emit('message',{message});
-      
-      // Limpando os campos
-      $('#topic').val('');
-      $('#text').val('');
     }
   </script>
 {% endblock %}

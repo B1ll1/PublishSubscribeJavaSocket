@@ -5,7 +5,7 @@ var mysql = require('mysql');
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "123456",
+  password: "root",
   database : 'flask'
 });
 
@@ -33,7 +33,6 @@ io.sockets.on('connection', function(socket) {
             getSubscriptions(data, function(err, content, socket) {
                 if (err) {
                     console.log(err);
-                    // Do something with your error...
                 } else {
                     subscriptions = content;
                 }
@@ -42,21 +41,10 @@ io.sockets.on('connection', function(socket) {
         else{
              console.log('Analista Conectado');
         }
-
-        /*
-        con.query('SELECT * from subscriptions where user_id = ?', [message], function (error, results, fields) {
-          if (error) throw error;
-          var subscriptions = JSON.stringify(results)
-
-        });*/
     });
 
     socket.on('message', function (data){
-        console.log('chegou');
         socket.broadcast.emit('publicacoes/'+data.message.topic, { data });
     })
-
 });
-
-
 server.listen(3000);

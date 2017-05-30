@@ -67,7 +67,14 @@
                     </tr>
                 </thead>
                 <tbody id="historyTableBody">
-
+                    {% for var1 in history %}
+                        {% for var2 in var1 %}
+                          <tr class="text-center">
+                             <td>{{ var2['topic'] }}</td>
+                             <td>{{ var2['text'] }}</td>
+                          </tr>
+                        {% endfor %}
+                   {% endfor %}
                 </tbody>
               </table>
             </div>

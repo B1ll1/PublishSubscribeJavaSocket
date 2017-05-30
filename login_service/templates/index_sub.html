@@ -4,7 +4,7 @@
 
     <h1>Sistema de inscrição baseado no método Publish/Subscribe</h1>
     <p class="lead"></p>
-    
+
     <div class="row" style="padding-bottom: 5%;">
       <form role="form" action="/inscritos" method="POST" class="form-horizontal">
         <div class="col-md-8 col-xs-12">
@@ -22,7 +22,7 @@
         </div>
       </form>
     </div>
-    
+
     <div class="row">
       <div class="panel panel-default">
         <div class="panel-heading" style="background-color: Blue; ">
@@ -33,7 +33,8 @@
           {% for res in result_subs %}
             <li class="list-group-item">
               {{ res.topic }}
-              <span class="btn btn-danger btn-xs pull-right">&times;</span>
+              <input type="submit" value="X"  onclick="window.location='/removerinscricao?id='+'{{res.id}}' ;"  class="pull-right"/>
+
             </li>
           {% endfor %}
           </ul>

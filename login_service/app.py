@@ -5,6 +5,7 @@ from models.Publishing import Publishing
 from models.Subscription import Subscription
 from flask_login import login_user, logout_user, login_required, current_user
 from config import login_manager, app, db
+from flask import jsonify
 
 def render_sub():
 	results_topics = db.engine.execute('SELECT DISTINCT publishings.topic FROM publishings ORDER BY topic ASC')
@@ -13,12 +14,15 @@ def render_sub():
 
 def render_user_topics():
 	subscriptions = Subscription.query.filter_by(user_id = current_user.id).all()
-	# subs = ''.join(subscriptions)
-	# subs = subs.split(',')
-	# print subs
-	# sub_history = Publishing.query.filter(Publishing.topic.in_(subscriptions)).all()
-	# print sub_history
-	return subscriptions
+
+	tamanho = len(subscriptions)
+	history_arr = []
+	for var in subscriptions:
+		string = 'SELECT * FROM publishings WHERE topic = "'+str(var)+'"'
+		res = db.engine.execute(string).fetchall()
+		history_arr.append(res)
+
+	return subscriptions, history_arr
 
 @login_manager.user_loader
 def load_user(id):
@@ -40,8 +44,8 @@ def pubs():
 @login_required
 def publishings():
 	if current_user.type == 2:
-		subscriptions = render_user_topics()
-		return render_template('publicacoes.html', subs = subscriptions)
+		subscriptions, history = render_user_topics()
+		return render_template('publicacoes.html', subs = subscriptions, history = history)
 	else:
 		return redirect(url_for('logout'))
 
@@ -50,7 +54,6 @@ def publishings():
 def subs():
 	if request.method == 'GET' and current_user.type == 2:
 		topics, subscriptions = render_sub()
-		print topics, subscriptions
 		return render_template('index_sub.html', result_topics = topics, result_subs = subscriptions)
 
 	elif request.method == 'GET' and current_user.type != 2:
@@ -65,7 +68,6 @@ def subs():
 			return redirect(url_for('subs'))
 		else:
 			topics, subscriptions = render_sub()
-			print topics, subscriptions
 			return render_template('index_sub.html', warning = 'aviso', result_topics = topics, result_subs = subscriptions)
 
 	else:
@@ -82,14 +84,14 @@ def publish():
 	else:
 		return redirect(url_for('logout'))
 
-@app.route('/removerinscricao', methods = ['POST'])
+@app.route('/removerinscricao', methods = ['GET'])
 @login_required
 def unsubscribe():
 	if current_user.type == 2:
-		subscription = Subscription.query.filter_by(topic = request.form['topic'], user_id = current_user.id).first()
-		db.session.remove(subscription)
-		db.session.commit()
-		return redirect(url_for('subscribe'))
+		sub_id = request.args.get('id')
+		string = 'DELETE FROM subscriptions WHERE id ='+sub_id
+		db.engine.execute(string)
+		return redirect(url_for('subs'))
 	else:
 		return redirect(url_for('logout'))
 
