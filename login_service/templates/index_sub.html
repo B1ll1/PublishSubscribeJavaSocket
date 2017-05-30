@@ -3,32 +3,43 @@
 {% block body %}
 
     <h1>Sistema de inscrição baseado no método Publish/Subscribe</h1>
-    <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-
-    <form role="form" action="/inscritos" method="POST">
-        <div class="form-group">
-            <select class="form-control" name="topic">
+    <p class="lead"></p>
+    
+    <div class="row" style="padding-bottom: 5%;">
+      <form role="form" action="/inscritos" method="POST" class="form-horizontal">
+        <div class="col-md-8 col-xs-12">
+          <div class="form-group">
+            <label for="selectTopic" class="control-label">Selecione um tópico para inscrição</label>
+            <select class="form-control" name="topic" id="selectTopic">
             {% for res in result_topics %}
-                <option value="{{ res.topic }}">{{ res.topic }}</option>
+              <option value="{{ res.topic }}">{{ res.topic }}</option>
             {% endfor %}
             </select>
+          </div>
         </div>
-        <input type="submit" value="Inscrever" class="btn btn-info btn-block">
-    </form>
-    <br>
-    <div class="panel panel-default">
-        <div class="panel-heading" style="background-color: Blue; ">
-            <h3 class="panel-title" style="color: White;">Inscrições</h3>
+        <div class="col-md-4 col-xs-12">
+          <input type="submit" value="Inscrever-se" class="btn btn-info btn-block" style="margin-top: 7%;">
         </div>
-        <div class="panel-body" style="overflow-y:scroll; max-height: 200px;">
-            <ul class="list-group">
-             {% for res in result_subs %}
-                <li class="list-group-item">{{ res.topic }}</li>
-             {% endfor %}
-            </ul>
-        </div>
+      </form>
     </div>
-
+    
+    <div class="row">
+      <div class="panel panel-default">
+        <div class="panel-heading" style="background-color: Blue; ">
+          <h3 class="panel-title" style="color: White;">Inscrições</h3>
+        </div>
+        <div class="panel-body" style="overflow-y:scroll; max-height: 300px; min-height: 200px">
+          <ul class="list-group">
+          {% for res in result_subs %}
+            <li class="list-group-item">
+              {{ res.topic }}
+              <span class="btn btn-danger btn-xs pull-right">&times;</span>
+            </li>
+          {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
 
 <script type="text/javascript">
 

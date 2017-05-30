@@ -2,46 +2,59 @@
 
 {% block body %}
 
-    <h1>Sistema de inscrição baseado no método Publish/Subscribe</h1>
+  <h1 class="text-center">Sistema de inscrição baseado no método Publish/Subscribe</h1>
 
-    <form role="form" action="/publicar" method="POST" id="form">
+  <div class="panel panel-primary">
+    <div class="panel-heading">Publicar</div>
+    <div class="panel-body">
+      <form role="form" action="/publicar" method="POST" id="form">
         <div class="form-group">
-            <input type="text" name="topic" id="topic" class="form-control input-sm" placeholder="Tópico">
+          <label for="topic" class="label-control">Tópico</label>
+          <input type="text" name="topic" id="topic" class="form-control input-sm" placeholder="Tópico">
         </div>
+
         <div class="form-group">
-            <textarea name="text" id="text" class="form-control input-sm" placeholder="Texto da Publicação"></textarea>
+          <label for="text" class="label-control">Texto da Publicação</label>
+          <textarea name="text" id="text" class="form-control input-sm" placeholder="Texto da Publicação" style="min-height: 150px; resize:vertical;"></textarea>
         </div>
-        <input type="submit" value="Publicar" class="btn btn-info btn-block" onClick="publish()">
-    </form>
+      </form>
+    </div>
+    <div class="panel-footer">
+      <input type="submit" value="Publicar" class="btn btn-info pull-right" onClick="publish()">
+      <span class="clearfix"></span>
+    </div>
+  </div>
 
-    <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
-    <script type="text/javascript" charset="utf-8">
-        var user = {id:{{ current_user.id }}, type: {{ current_user.type }}}
-        var socket = io.connect('http://localhost:3000', { secure: true });
-        socketControl(socket);
-        function socketControl(socket){
-              socket.on('connect', function() {
-                socket.emit('user_data', user);
-                console.log('conectado');
-              });
+  <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
+  <script type="text/javascript" charset="utf-8">
+    var user = {id:{{ current_user.id }}, type: {{ current_user.type }}}
+    var socket = io.connect('http://localhost:3000', { secure: true });
+    socketControl(socket);
+    function socketControl(socket){
+      socket.on('connect', function() {
+        socket.emit('user_data', user);
+        console.log('conectado');
+      });
 
-              socket.on('disconnect', function() {
-                alert("Disconectado");
-              });
+      socket.on('disconnect', function() {
+        alert("Disconectado");
+      });
 
-              socket.on('message', function(message) {
-                console.log(message);
-              });
-        }
+      socket.on('message', function(message) {
+        console.log(message);
+      });
+    }
 
-        function publish(){
-            var topic = $('#topic').val();
-            var text = $('#text').val();
-            var message = {topic: topic, text: text}
-            socket.emit('message',{message});
-        }
-
-    </script>
-
+    function publish(){
+      var topic = $('#topic').val();
+      var text = $('#text').val();
+      var message = {topic: topic, text: text}
+      socket.emit('message',{message});
+      
+      // Limpando os campos
+      $('#topic').val('');
+      $('#text').val('');
+    }
+  </script>
 {% endblock %}
 

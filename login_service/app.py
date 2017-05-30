@@ -13,6 +13,11 @@ def render_sub():
 
 def render_user_topics():
 	subscriptions = Subscription.query.filter_by(user_id = current_user.id).all()
+	# subs = ''.join(subscriptions)
+	# subs = subs.split(',')
+	# print subs
+	# sub_history = Publishing.query.filter(Publishing.topic.in_(subscriptions)).all()
+	# print sub_history
 	return subscriptions
 
 @login_manager.user_loader
@@ -36,12 +41,11 @@ def pubs():
 def publishings():
 	if current_user.type == 2:
 		subscriptions = render_user_topics()
-		print subscriptions
 		return render_template('publicacoes.html', subs = subscriptions)
 	else:
 		return redirect(url_for('logout'))
 
-@app.route('/inscritos',  methods = ['POST', 'GET'])
+@app.route('/inscritos', methods = ['POST', 'GET'])
 @login_required
 def subs():
 	if request.method == 'GET' and current_user.type == 2:
