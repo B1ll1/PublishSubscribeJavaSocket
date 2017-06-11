@@ -28,8 +28,9 @@
 
   <script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
   <script type="text/javascript" charset="utf-8">
+    var ip = location.host.split(":");
+    var socket = io.connect('http://'+ip[0]+':3000', { secure: true });
     var user = {id:{{ current_user.id }}, type: {{ current_user.type }}}
-    var socket = io.connect('http://localhost:3000', { secure: true });
     socketControl(socket);
     function socketControl(socket){
       socket.on('connect', function() {

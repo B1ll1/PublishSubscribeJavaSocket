@@ -41,11 +41,12 @@
           {% endif %}
         </div>
         <div id="navbar" class="collapse navbar-collapse">
+        {% if  current_user.type == 2 %}
           <ul class="nav navbar-nav">
             <li class="active"><a href="/inscritos">Inscrições</a></li>
             <li><a href="/publicacoes">Publicações</a></li>
           </ul>
-
+          {% endif %}
           <ul class="nav navbar-nav navbar-right">
             <li>
               <a href="#">
